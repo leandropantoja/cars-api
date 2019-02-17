@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: cars-api
+  labels:
+    serviceType: cars-api
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      name: cars-api
+      labels:
+        serviceType: cars-api
+    spec:
+      containers:
+        - name: cars-api
+          image: leandropantoja/cars-api:0.0.1-SNAPSHOT
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8084
+              protocol: TCP
+          env:
+          - name: JAVA_OPTS
+            value: -Xmx64m -Xms64m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cars-api-entrypoint
+  namespace: default
+spec:
+  selector:
+    serviceType: cars-api
+  ports:
+    - port: 8084
+      targetPort: 8084
+      nodePort: 30090
+  type: NodePort
