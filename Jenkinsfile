@@ -55,24 +55,7 @@ podTemplate(label: label, containers: [
             }
         }
 
-        stage("Package"){
-                container("docker-container"){
-                    echo 'Iniciando empacotamento com docker' 
-                    
-                    
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-leandropantoja', passwordVariable: 'DOCKER_HUB_PASSWORD', usernameVariable: 'DOCKER_HUB_USER')]) {
-                        sh "docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD}"
-                        sh "cp ${MAVEN_REPO_DIR}/${IMAGE}-${VERSION}.jar ${IMAGE}-${VERSION}.jar"
-                        sh "sed -i 's/APP_NAME/${IMAGE}-${VERSION}.jar/g' Dockerfile "
-                        DOCKER_HUB_USERNAME = DOCKER_HUB_USER
-                    }
-
-                    IMAGE_FINAL_NAME = DOCKER_HUB_USERNAME.trim()+'/'+IMAGE+':'+VERSION
-                    echo IMAGE_FINAL_NAME
-                    sh "docker build -t ${IMAGE_FINAL_NAME} ."
-                    sh "docker push ${IMAGE_FINAL_NAME}"
-                }
-        }
+        
         
         stage("Deploy"){
                 container('kubectl') {
