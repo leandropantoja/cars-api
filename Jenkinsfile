@@ -60,7 +60,7 @@ podTemplate(label: label, containers: [
                     echo 'Iniciando empacotamento com docker' 
                     
                     
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub-leandro', passwordVariable: 'DOCKER_HUB_PASSWORD', usernameVariable: 'DOCKER_HUB_USER')]) {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-leandropantoja', passwordVariable: 'DOCKER_HUB_PASSWORD', usernameVariable: 'DOCKER_HUB_USER')]) {
                         sh "docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD}"
                         sh "cp ${MAVEN_REPO_DIR}/${IMAGE}-${VERSION}.jar ${IMAGE}-${VERSION}.jar"
                         sh "sed -i 's/APP_NAME/${IMAGE}-${VERSION}.jar/g' Dockerfile "
