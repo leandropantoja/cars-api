@@ -12,6 +12,6 @@ spec:
   - jwt:
       audiences:
       - cars-web
-      issuer: "http://192.168.56.3:31275/auth/realms/istio"
-      jwksUri: "http://192.168.56.3:31275/auth/realms/istio/protocol/openid-connect/certs"
+      issuer: "http://192.168.56.4:30080/auth/realms/istio"
+      jwksUri: "http://192.168.56.4:30080/auth/realms/istio/protocol/openid-connect/certs"
   principalBinding: USE_ORIGIN
