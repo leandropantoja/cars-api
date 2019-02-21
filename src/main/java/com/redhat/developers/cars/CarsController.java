@@ -22,6 +22,4 @@ public class CarsController {
     public List<String> cars() {
         return Arrays.asList("BMW", "Hyundai Verna", "Audi", "Ferrari");
     }
-
-}
 }
