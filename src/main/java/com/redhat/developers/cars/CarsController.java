@@ -22,4 +22,10 @@ public class CarsController {
     public List<String> cars() {
         return Arrays.asList("BMW", "Hyundai Verna", "Audi", "Ferrari");
     }
+    
+     @RequestMapping(value = "/listOthers", produces = "application/json")
+    public List<String> otherCars() {
+        return Arrays.asList("Fusca", "Uno", "gol", "Palio");
+    }
+}
 }
