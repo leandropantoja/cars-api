@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - image: leandropantoja/cars-api:0.0.1-SNAPSHOT
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         name: cars-api
         ports:
         - containerPort: 8084
