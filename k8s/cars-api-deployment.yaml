@@ -8,8 +8,12 @@ metadata:
   labels:
     serviceType: cars-api
 spec:
-  replicas: 1
-  strategy: {}
+  replicas: 6
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 1
   template:
     metadata:
       name: cars-api
