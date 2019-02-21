@@ -4,6 +4,7 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   name: cars-api
+  namespace: default
   labels:
     serviceType: cars-api
 spec:
