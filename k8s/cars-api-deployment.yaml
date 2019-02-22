@@ -26,7 +26,7 @@ spec:
         serviceType: cars-api
     spec:
       containers:
-      - image: leandropantoja/cars-api:0.0.1-SNAPSHOT
+      - image: leandropantoja/cars-api:{{IMAGE_VERSION}}
         imagePullPolicy: Always
         name: cars-api
         ports:
