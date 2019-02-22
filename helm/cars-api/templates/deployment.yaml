@@ -33,7 +33,13 @@ spec:
         - containerPort: {{ .Values.service.port }}
         livenessProbe:
           httpGet:
-            path: /isAlive
+            path: /actuator
+            port: {{ .Values.service.nodePort }}
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /actuator
             port: {{ .Values.service.nodePort }}
           initialDelaySeconds: 5
           periodSeconds: 5
