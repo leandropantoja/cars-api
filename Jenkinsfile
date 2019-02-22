@@ -80,7 +80,7 @@ podTemplate(label: label, containers: [
                 container('kubectl') {
                     withKubeConfig([credentialsId: 'cad3c6a6-3b20-4afd-9c9f-9017a5c35824', serverUrl: 'https://192.168.55.34:6443']) {
                         echo 'Realizando deploy da API no Kubernetes'
-                        sh "cat k8s/cars-api-deployment.yaml | sed s/\$IMAGE_VERSION/0.0.2-SNAPSHOT/ | kubectl apply -f -"
+                        sh "kubectl apply -f k8s/cars-api-deployment.yaml"
                         sh "kubectl apply -f k8s/cars-api-service.yaml"
                         sh "kubectl apply -f istio/cars-api-auth.yaml"
                         sh "kubectl apply -f istio/mixer-rule-only-authorized.yaml"
