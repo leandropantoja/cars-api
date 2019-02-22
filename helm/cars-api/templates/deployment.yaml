@@ -11,9 +11,8 @@ spec:
   replicas: 6
   strategy:
     type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 2
-      maxSurge: 2
+    rollingUp      maxSurge: 50%
+    
   template:
     metadata:
       name: {{ .Values.metadata.name }}
