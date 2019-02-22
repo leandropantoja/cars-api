@@ -34,13 +34,13 @@ spec:
           httpGet:
             path: /actuator
             port: {{ .Values.service.nodePort }}
-          initialDelaySeconds: 5
+          timeoutSeconds: 1
           periodSeconds: 5
         readinessProbe:
           httpGet:
             path: /actuator
             port: {{ .Values.service.nodePort }}
-          initialDelaySeconds: 5
+          timeoutSeconds: 1
           periodSeconds: 5
         resources: {}
       - args:
