@@ -2,7 +2,7 @@ def label = "cars-api-${UUID.randomUUID().toString()}"
 
 podTemplate(label: label, containers: [
   containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat'),
-  containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.0', command: 'cat', ttyEnabled: true),
+  containerTemplate(alwaysPullImage: false, args: 'cat', command: '/bin/sh -c', image: 'lachlanevenson/k8s-helm:v2.11.0', name: 'helm-container', ttyEnabled: true),
   containerTemplate(alwaysPullImage: false, args: 'cat', command: '/bin/sh -c', envVars: [], image: 'docker', name: 'docker-container', ttyEnabled: true, workingDir: '/home/jenkins')
   ], volumes: [
   hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock'),
@@ -16,9 +16,15 @@ podTemplate(label: label, containers: [
   def IMAGE_FINAL_NAME
   def DOCKER_HUB_USERNAME
   
+  def CHARTMUSEUM_URL =  'http://helm-chartmuseum:8080'
+  
+  def HELM_CHART_NAME = 'devops/cars-api'
+  
   def KUBE_NAMESPACE
   
   def IMAGE_POSTFIX =''
+  
+  def HELM_DEPLOY_NAME
   
     node(label) {
         stage('Checkout and Build') {
@@ -43,6 +49,7 @@ podTemplate(label: label, containers: [
                         throw new Exception(error)
                     }
                     
+                    HELM_DEPLOY_NAME = KUBE_NAMESPACE + '-cars-api'
                     
                     IMAGE = readMavenPom().getArtifactId()
                     VERSION = readMavenPom().getVersion()
@@ -77,16 +84,27 @@ podTemplate(label: label, containers: [
         
         
         stage("Deploy"){
-                container('kubectl') {
-                    withKubeConfig([credentialsId: 'cad3c6a6-3b20-4afd-9c9f-9017a5c35824', serverUrl: 'https://192.168.55.34:6443']) {
-                        echo 'Realizando deploy da API no Kubernetes'
-                        sh "kubectl apply -f k8s/cars-api-deployment.yaml"
-                        sh "kubectl apply -f k8s/cars-api-service.yaml"
-                        sh "kubectl apply -f istio/cars-api-auth.yaml"
-                        sh "kubectl apply -f istio/mixer-rule-only-authorized.yaml"
+                container("helm-container"){
+                    echo 'Iniciando deploy com helm' 
+                    sh """
+                        helm init --client-only
+                        helm repo add devops ${CHARTMUSEUM_URL}
+                        helm repo update
+                    """
+                     try {
+                        //Upgrade
+                        sh "helm upgrade  --namespace=${KUBE_NAMESPACE} ${HELM_DEPLOY_NAME} ${HELM_CHART_NAME} --set image.tag=${VERSION}"
                     }
+
+                    catch(Exception e){
+                        //Install
+                        sh "helm install  --namespace=${KUBE_NAMESPACE} --name=${HELM_DEPLOY_NAME} ${HELM_CHART_NAME} --set image.tag=${VERSION}"
+                    }
+    
+
                 }
         }
+
         
         
     }
