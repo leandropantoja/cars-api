@@ -1,0 +1,29 @@
+---
+apiVersion: "config.istio.io/v1alpha2"
+kind: denier
+metadata:
+  name: {{ .Values.metadata.name }}-handler
+  namespace: {{ .Values.labels.namespace }}
+spec:
+  status:
+    code: 16
+    message: SEM AUTORIZACAO PARA ACESSAR O SERVICO
+---
+apiVersion: "config.istio.io/v1alpha2"
+kind: checknothing
+metadata:
+  name: {{ .Values.metadata.name }}-denyrequest
+  namespace: {{ .Values.labels.namespace }}
+spec:
+---
+apiVersion: "config.istio.io/v1alpha2"
+kind: rule
+metadata:
+  name: {{ .Values.metadata.name }}-deny
+  namespace: {{ .Values.labels.namespace }}
+spec:
+  match: destination.labels["app"] == "{{ .Values.metadata.name }}" && destination.namespace == "{{ .Values.labels.namespace }}" && request.path == "/cars/list" && (request.headers["authorization"]|"unauthorized") == "unauthorized"
+  actions:
+  - handler: {{ .Values.metadata.name }}-handler.denier.default
+    instances: [{{ .Values.metadata.name }}-denyrequest.checknothing.default]
+

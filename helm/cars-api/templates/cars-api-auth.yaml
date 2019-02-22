@@ -1,0 +1,18 @@
+apiVersion: authentication.istio.io/v1alpha1
+kind: Policy
+metadata:
+  name: {{ .Values.metadata.name }}-auth-policy
+  namespace: {{ .Values.labels.namespace }}
+spec:
+  targets:
+  - name: {{ .Values.metadata.name }}
+  peers:
+  - mtls: {}
+  origins:
+  - jwt:
+      audiences:
+      - {{ .Values.identity.client.name }}
+      issuer: "{{ .Values.identity.provider.url }}"
+      jwksUri: "{{ .Values.identity.provider.url }}/protocol/openid-connect/certs"
+  principalBinding: USE_ORIGIN
+
