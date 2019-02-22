@@ -31,6 +31,12 @@ spec:
         name: {{ .Values.metadata.name }}
         ports:
         - containerPort: {{ .Values.service.port }}
+        livenessProbe:
+          httpGet:
+            path: /actuator
+            port: {{ .Values.service.port }}
+          initialDelaySeconds: 5
+          periodSeconds: 5
         resources: {}
       - args:
         - proxy
