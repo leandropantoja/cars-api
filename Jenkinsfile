@@ -73,6 +73,7 @@ podTemplate(label: label, containers: [
                         helm init --client-only
                         helm repo add devops ${CHARTMUSEUM_URL}
                         helm repo update
+                        helm package helm/cars-api
                     """
                      try {
                         //Upgrade
