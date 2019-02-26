@@ -51,7 +51,7 @@ podTemplate(label: label, containers: [
                         throw new Exception(error)
                     }
                     
-                    HELM_DEPLOY_NAME = KUBE_NAMESPACE + PROJECT_NAME
+                    HELM_DEPLOY_NAME = KUBE_NAMESPACE + '-' + PROJECT_NAME
                     
                     IMAGE = readMavenPom().getArtifactId()
                     VERSION = readMavenPom().getVersion()
@@ -76,7 +76,7 @@ podTemplate(label: label, containers: [
                         helm init --client-only
                         helm repo add devops ${CHARTMUSEUM_URL}
                         helm repo update
-                        helm package helm/${HELM_DEPLOY_NAME} --app-version ${VERSION}  --version ${VERSION}
+                        helm package helm/${PROJECT_NAME} --app-version ${VERSION}  --version ${VERSION}
                     """
                      try {
                         //Upgrade
