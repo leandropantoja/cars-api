@@ -26,6 +26,8 @@ podTemplate(label: label, containers: [
   
   def HELM_DEPLOY_NAME
   
+  def PROJECT_NAME = 'cars-api'
+  
     node(label) {
         stage('Checkout and Build') {
             container('maven') {
@@ -49,7 +51,7 @@ podTemplate(label: label, containers: [
                         throw new Exception(error)
                     }
                     
-                    HELM_DEPLOY_NAME = KUBE_NAMESPACE + '-cars-api'
+                    HELM_DEPLOY_NAME = KUBE_NAMESPACE + PROJECT_NAME
                     
                     IMAGE = readMavenPom().getArtifactId()
                     VERSION = readMavenPom().getVersion()
@@ -89,6 +91,7 @@ podTemplate(label: label, containers: [
                     sh """
                         helm init --client-only
                         helm repo add devops ${CHARTMUSEUM_URL}
+                        helm push helm/$PROJECT_NAME ${HELM_CHART_NAME}
                         helm repo update
                     """
                      try {
