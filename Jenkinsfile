@@ -91,7 +91,6 @@ podTemplate(label: label, containers: [
                     sh """
                         helm init --client-only
                         helm repo add devops ${CHARTMUSEUM_URL}
-                        helm push helm/$PROJECT_NAME ${HELM_CHART_NAME}
                         helm repo update
                     """
                      try {
