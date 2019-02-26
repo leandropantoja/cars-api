@@ -18,7 +18,7 @@ podTemplate(label: label, containers: [
   
   def CHARTMUSEUM_URL =  'http://helm-chartmuseum:8080'
   
-  def HELM_CHART_NAME = 'devops/cars-api'
+  def HELM_CHART_NAME = ''
   
   def KUBE_NAMESPACE
   
@@ -55,6 +55,9 @@ podTemplate(label: label, containers: [
                     
                     IMAGE = readMavenPom().getArtifactId()
                     VERSION = readMavenPom().getVersion()
+                    
+                    HELM_CHART_NAME = PROJECT_NAME + '-' + VERSION + '.tgz'
+                    
                 }
                 
                 stage('Contruindo o projeto com Maven') {
@@ -73,7 +76,7 @@ podTemplate(label: label, containers: [
                         helm init --client-only
                         helm repo add devops ${CHARTMUSEUM_URL}
                         helm repo update
-                        helm package helm/cars-api
+                        helm package helm/${HELM_DEPLOY_NAME} --app-version ${VERSION}  --version ${VERSION}
                     """
                      try {
                         //Upgrade
