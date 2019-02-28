@@ -8,7 +8,7 @@ metadata:
   labels:
     serviceType: {{ .Values.spec.selector.serviceType }}
 spec:
-  replicas: 8
+  replicas: 2
   strategy:
     type: RollingUpdate
     rollingUpdate: 
