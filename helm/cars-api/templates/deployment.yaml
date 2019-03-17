@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: {{ .Values.metadata.name }}
         ports:
           - name: http
@@ -37,20 +37,20 @@ spec:
             httpGet:
               path: /actuator/health
               port: http
-            initialDelaySeconds: 40
-            timeoutSeconds: 1
-            periodSeconds: 15
+            initialDelaySeconds: 60
+            timeoutSeconds: 60
+            periodSeconds: 60
         readinessProbe:
             httpGet:
               path: /actuator/health
               port: http
-            initialDelaySeconds: 40
-            timeoutSeconds: 1
-            periodSeconds: 15
+            initialDelaySeconds: 60
+            timeoutSeconds: 60
+            periodSeconds: 60
         resources:
           requests:
-            memory: "32Mi"
-            cpu: "1m"
+            memory: "512Mi"
+            cpu: "400m"
           limits:
-            memory: "256Mi"
-            cpu: "100m"
+            memory: "1024Mi"
+            cpu: "800m"
